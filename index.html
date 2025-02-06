@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ポケモンSV(藍の円盤) おやつおやじイベント 対策メモ</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f0f5f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .pokemon {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #e8f4f8;
+            border-radius: 5px;
+        }
+        .pokemon h2 {
+            color: #34495e;
+            margin-top: 0;
+        }
+        .moves {
+            margin-bottom: 10px;
+        }
+        .note {
+            color: #7f8c8d;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ポケモンSV(藍の円盤) おやつおやじイベント 対策メモ</h1>
+        <div id="pokemon-list"></div>
+    </div>
+
+    <script>
+        const pokemonData = [
+            { number: 144, name: "フリーザー", moves: "ぼうふう, くろいきり, ふぶき, ぜったいれいど", note: "特筆事項なし" },
+            { number: 145, name: "サンダー", moves: "かみなり, みきり, じばそうさ, でんじほう", note: "地面を出せばノーダメージ。対策例：ヌオーやドオーであくび" },
+            { number: 146, name: "ファイヤー", moves: "ぼうふう, こらえる, オーバーヒート, ゴッドバード", note: "ロースト砂漠の砂嵐による自滅あり。対策例：マジックガードのユニランがスキルスワップ" },
+            { number: 243, name: "ライコウ", moves: "じんつうりき, ほうでん, リフレクター, あまごい", note: "特筆事項なし" },
+            { number: 244, name: "エンテイ", moves: "じんつうりき, ふんえん, いばる, にほんばれ", note: "特筆事項なし" },
+            { number: 245, name: "スイクン", moves: "じんつうりき, なみのり, ミラーコート, あまごい", note: "特筆事項なし" },
+            { number: 249, name: "ルギア", moves: "じんつうりき, じこさいせい, エアロブラスト, あまごい", note: "じこさいせい（PP:5）あり。対策例：ぶきようのゴルーグがとつげきチョッキをトリック" },
+            { number: 250, name: "ホウオウ", moves: "じんつうりき, じこさいせい, せいなるほのお, にほんばれ", note: "じこさいせい（PP:5）あり。対策例：ぶきようのゴルーグがとつげきチョッキをトリック" },
+            { number: 380, name: "ラティアス", moves: "ミラータイプ, サイコキネシス, ガードシェア, いやしのねがい", note: "悪を出せばノーダメージ。対策例：アラブルタケでキノコのほうし" },
+            { number: 381, name: "ラティオス", moves: "ラスターパージ, りゅうのはどう, しねんのずつき, りゅうのいぶき", note: "フェアリー悪を出せばノーダメージ。対策例：オーロンゲが覚える状態異常技はでんじはだけ" },
+            { number: 382, name: "カイオーガ", moves: "だくりゅう, れいとうビーム, ぜったいれいど, アクアリング", note: "アクアリングあり。対策例：ぶきようのゴルーグがとつげきチョッキをトリック" },
+            { number: 383, name: "グラードン", moves: "じしん, アームハンマー, じわれ, ねむる", note: "ねむる（PP:5）あり。ゴースト飛行またはゴースト浮遊を出せばノーダメージ。対策例：ぶきようのゴルーグがとつげきチョッキをトリック後、フワライドやゴースでさいみんじゅつ" },
+            { number: 384, name: "レックウザ", moves: "りゅうのはどう, ハイパーボイス, ねむる, そらをとぶ", note: "ねむる（PP:5）あり。対策例：ぶきようのゴルーグがとつげきチョッキをトリック" },
+            { number: 638, name: "コバルオン", moves: "せいなるつるぎ, つるぎのまい, アイアンヘッド, インファイト", note: "特筆事項なし" },
+            { number: 639, name: "テラキオン", moves: "せいなるつるぎ, つるぎのまい, ストーンエッジ, インファイト", note: "特筆事項なし" },
+            { number: 640, name: "ビリジオン", moves: "せいなるつるぎ, つるぎのまい, リーフブレード, インファイト", note: "特筆事項なし" },
+            { number: 643, name: "レシラム", moves: "かえんほうしゃ, クロスフレイム, ハイパーボイス, だいもんじ", note: "特筆事項なし" },
+            { number: 644, name: "ゼクロム", moves: "10まんボルト, クロスサンダー, ハイパーボイス, かみなり", note: "ゴースト地面を出せばノーダメージ。対策例：スナバァでさいみんじゅつ" },
+            { number: 646, name: "キュレム", moves: "ハイパーボイス, こわいかお, ふぶき, ふういん", note: "特筆事項なし" },
+            { number: 791, name: "ソルガレオ", moves: "メタルバースト, ワイルドボルト, ソーラービーム, フレアドライブ", note: "反動による自滅あり。対策例：マジックガードのユニランがスキルスワップ" },
+            { number: 792, name: "ルナアーラ", moves: "サイコキネシス, ムーンフォース, ゴーストダイブ, ゆめくい", note: "特筆事項なし" },
+            { number: 800, name: "ネクロズマ", moves: "アシストパワー, ロックブラスト, てっぺき, パワージェム", note: "特筆事項なし" },
+            { number: 891, name: "ダクマ", moves: "こわいかお, ずつき, かわらわり, みきり", note: "ゴーストを出せばノーダメージ。対策例：フワライドやゴースやラウドボーンで眠らせる" },
+            { number: 896, name: "ブリザポス", moves: "てっぺき, あばれる, ちょうはつ, すてみタックル", note: "ゴーストを出せばノーダメージ。対策例：フワライドやゴースやラウドボーンで眠らせる" },
+            { number: 897, name: "レイスポス", moves: "こうそくいどう, あばれる, かなしばり, すてみタックル", note: "ゴーストを出せばノーダメージ。対策例：フワライドやゴースやラウドボーンで眠らせる" }
+        ];
+
+        const pokemonList = document.getElementById('pokemon-list');
+
+        pokemonData.forEach(pokemon => {
+            const pokemonElement = document.createElement('div');
+            pokemonElement.className = 'pokemon';
+            pokemonElement.innerHTML = `
+                <h2>No.${pokemon.number} ${pokemon.name}</h2>
+                <div class="moves">【わざ】${pokemon.moves}</div>
+                <div class="note">${pokemon.note}</div>
+            `;
+            pokemonList.appendChild(pokemonElement);
+        });
+    </script>
+</body>
+</html>
